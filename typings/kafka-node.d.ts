@@ -23,6 +23,7 @@ declare module 'kafka-node' {
     // Producer
     export interface Producer {
         on(eventName: string, cb: () => void): void;
+        on(eventName: string, cb: (error: Error) => void): void;
         send(payloads: any, cb: (error: Error, data: Object) => void): void;
         createTopics(topics: Array<string>, async: boolean, cb?: (error: Error, data: Object) => void): void;
     }
@@ -34,7 +35,8 @@ declare module 'kafka-node' {
     // HighLevelProducer
     export interface HighLevelProducer {
         on(eventName: string, cb: () => void): void;
-        send(payloads: Array<IProduceRequest>, cb: (error: Error, data: Object) => void): void;
+        on(eventName: string, cb: (error: Error) => void): void;
+        send(payloads: Array<ProduceRequest>, cb: (error: Error, data: Object) => void): void;
         createTopics(topics: Array<string>, async: boolean, cb?: (error: Error, data: Object) => void): void;
     }
 
@@ -51,11 +53,38 @@ declare module 'kafka-node' {
         new(key: string, message: string): KeyedMessage;
     }
 
-    // ProduceRequests
-    interface IProduceRequest {
+    // ProduceRequest
+    interface ProduceRequest {
         topic: string;
         partition?: number;
         attributes?: number;
+    }
+
+    // Consumer
+    export interface Consumer {
+        on(eventName: string, cb: (message: string) => void): void;
+        on(eventName: string, cb: (error: Error) => void): void;
+    }
+
+    interface ConsumerFactory {
+        new(client: Client, fetchRequests: Array<FetchRequest>, options: ConsumerOptions): Consumer;
+    }
+
+    export interface ConsumerOptions {
+        groupId: string;
+        autoCommit: boolean;
+        autoCommitIntervalMs?: number;
+        fetchMaxWaitMs?: number;
+        fetchMinBytes?: number;
+        fetchMaxBytes?: number;
+        fromOffset?: boolean;
+        encoding?: string;
+    }
+
+    // FetchRequest
+    export interface FetchRequest {
+        topic: string;
+        offset?: number;
     }
 
     // API
@@ -63,5 +92,6 @@ declare module 'kafka-node' {
     var KeyedMessage: KeyedMessageFactory;
     var Producer: ProducerFactory;
     var HighLevelProducer: HighLevelProducerFactory;
+    var Consumer: ConsumerFactory;
 
 }
