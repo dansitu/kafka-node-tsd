@@ -5,38 +5,30 @@
 
 declare module 'kafka-node' {
 
-    // # Major Classes
-    export interface Client {
+    // # Classes
+    export class Client {
+        constructor(connectionString: string, clientId: string, options?: ZKOptions);
         close(callback?: Function): void;
     }
 
-    interface ClientFactory {
-        new(connectionString: string, clientId: string, options?: ZKOptions): Client;
-    }
-
-    export interface Producer {
+    export class Producer {
+        constructor(client: Client);
         on(eventName: string, cb: () => any): void;
         on(eventName: string, cb: (error: any) => any): void;
         send(payloads: Array<ProduceRequest>, cb: (error: any, data: any) => any): void;
         createTopics(topics: Array<string>, async: boolean, cb?: (error: any, data: any) => any): void;
     }
 
-    interface ProducerFactory {
-        new(client: Client): Producer;
-    }
-
-    export interface HighLevelProducer {
+    export class HighLevelProducer {
+        constructor(client: Client);
         on(eventName: string, cb: () => any): void;
         on(eventName: string, cb: (error: any) => any): void;
         send(payloads: Array<ProduceRequest>, cb: (error: any, data: any) => any): void;
         createTopics(topics: Array<string>, async: boolean, cb?: (error: any, data: any) => any): void;
     }
 
-    interface HighLevelProducerFactory {
-        new(client: Client): HighLevelProducer;
-    }
-
-    export interface Consumer {
+    export class Consumer {
+        constructor(client: Client, fetchRequests: Array<Topic>, options: ConsumerOptions);
         on(eventName: string, cb: (message: string) => any): void;
         on(eventName: string, cb: (error: any) => any): void;
         addTopics(topics: Array<string>, cb: (error: any, added: boolean) => any): void;
@@ -51,11 +43,8 @@ declare module 'kafka-node' {
         close(force: boolean, cb: () => any): void;
     }
 
-    interface ConsumerFactory {
-        new(client: Client, fetchRequests: Array<Topic>, options: ConsumerOptions): Consumer;
-    }
-
-    export interface HighLevelConsumer {
+    export class HighLevelConsumer {
+        constructor(client: Client, payloads: Array<Topic>, options: ConsumerOptions);
         on(eventName: string, cb: (message: string) => any): void;
         on(eventName: string, cb: (error: any) => any): void;
         addTopics(topics: Array<string>, cb: (error: any, added: boolean) => any): void;
@@ -70,37 +59,26 @@ declare module 'kafka-node' {
         close(force: boolean, cb: () => any): void;
     }
 
-    export interface HighLevelConsumerFactory {
-        new(client: Client, payloads: Array<Topic>, options: ConsumerOptions): HighLevelConsumer;
-    }
-
-    export interface Offset {
+    export class Offset {
+        constructor(client: Client);
         on(eventName: string, cb: () => any): void;
         fetch(payloads: Array<OffsetRequest>, cb: (error: any, data: any) => any): void;
         commit(groupId: string, payloads: Array<OffsetCommitRequest>, cb: (error: any, data: any) => any): void;
         fetchCommits(groupId: string, payloads: Array<OffsetFetchRequest>, cb: (error: any, data: any) => any): void;
     }
 
-    export interface OffsetFactory {
-        new(client: Client): Offset;
+    export class KeyedMessage {
+        constructor(key: string, message: string);
     }
 
-    // # Minor Classes
+    // # Interfaces
     export interface ZKOptions {
         sessionTimeout?: number;
         spinDelay?: number;
         retries?: number;
     }
 
-    export interface KeyedMessage {
-
-    }
-
-    interface KeyedMessageFactory {
-        new(key: string, message: string): KeyedMessage;
-    }
-
-    interface ProduceRequest {
+    export interface ProduceRequest {
         topic: string;
         messages: any; // Array<string> | Array<KeyedMessage> | string | KeyedMessage
         partition?: number;
@@ -141,14 +119,5 @@ declare module 'kafka-node' {
         topic: string;
         partition?: number;
     }
-
-    // # API
-    var Client: ClientFactory;
-    var KeyedMessage: KeyedMessageFactory;
-    var Producer: ProducerFactory;
-    var HighLevelProducer: HighLevelProducerFactory;
-    var Consumer: ConsumerFactory;
-    var HighLevelConsumer: HighLevelConsumerFactory;
-    var Offset: OffsetFactory;
 
 }
