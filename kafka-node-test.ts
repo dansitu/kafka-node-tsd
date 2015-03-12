@@ -86,3 +86,25 @@ var consumer = new kafka.Consumer(basicClient, fetchRequests, {
 });
 consumer.on('error', function(error: Error){});
 consumer.on('message', function(message){});
+
+consumer.addTopics(['t1', 't2'], function (err, added) {});
+consumer.addTopics([{ topic: 't1', offset: 10 }], function (err, added) {}, true);
+
+consumer.removeTopics(['t1', 't2'], function (err, removed) {});
+
+consumer.commit(function (err, data) {});
+
+consumer.setOffset('topic', 0, 0);
+
+consumer.pause();
+consumer.resume();
+consumer.pauseTopics([
+    'topic1',
+    { topic: 'topic2', partition: 0 }
+]);
+consumer.resumeTopics([
+    'topic1',
+    { topic: 'topic2', partition: 0 }
+]);
+
+consumer.close(true, function () {});

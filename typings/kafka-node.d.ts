@@ -64,10 +64,20 @@ declare module 'kafka-node' {
     export interface Consumer {
         on(eventName: string, cb: (message: string) => void): void;
         on(eventName: string, cb: (error: Error) => void): void;
+        addTopics(topics: Array<string>, cb: (error: Error, added: boolean) => void): void;
+        addTopics(topics: Array<TopicWithOffset>, cb: (error: Error, added: boolean) => void, fromOffset: boolean): void;
+        removeTopics(topics: Array<string>, cb: (error: Error, removed: boolean) => void): void;
+        commit(cb: (error: Error, data: any) => void): void;
+        setOffset(topic: string, partition: number, offset: number): void;
+        pause(): void;
+        resume(): void;
+        pauseTopics(topics: Array<any>): void;
+        resumeTopics(topics: Array<any>): void;
+        close(force: boolean, cb: () => void): void;
     }
 
     interface ConsumerFactory {
-        new(client: Client, fetchRequests: Array<FetchRequest>, options: ConsumerOptions): Consumer;
+        new(client: Client, fetchRequests: Array<TopicWithOffset>, options: ConsumerOptions): Consumer;
     }
 
     export interface ConsumerOptions {
@@ -81,8 +91,8 @@ declare module 'kafka-node' {
         encoding?: string;
     }
 
-    // FetchRequest
-    export interface FetchRequest {
+    // TopicWithOffset
+    export interface TopicWithOffset {
         topic: string;
         offset?: number;
     }
