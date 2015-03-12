@@ -5,22 +5,15 @@
 
 declare module 'kafka-node' {
 
-    // Client
+    // # Major Classes
     export interface Client {
         close(callback?: Function): void;
-    }
-
-    export interface ZKOptions {
-        sessionTimeout?: number;
-        spinDelay?: number;
-        retries?: number;
     }
 
     interface ClientFactory {
         new(connectionString: string, clientId: string, options?: ZKOptions): Client;
     }
 
-    // Producer
     export interface Producer {
         on(eventName: string, cb: () => any): void;
         on(eventName: string, cb: (error: any) => any): void;
@@ -32,7 +25,6 @@ declare module 'kafka-node' {
         new(client: Client): Producer;
     }
 
-    // HighLevelProducer
     export interface HighLevelProducer {
         on(eventName: string, cb: () => any): void;
         on(eventName: string, cb: (error: any) => any): void;
@@ -44,24 +36,6 @@ declare module 'kafka-node' {
         new(client: Client): HighLevelProducer;
     }
 
-    // KeyedMessage
-    export interface KeyedMessage {
-
-    }
-
-    interface KeyedMessageFactory {
-        new(key: string, message: string): KeyedMessage;
-    }
-
-    // ProduceRequest
-    interface ProduceRequest {
-        topic: string;
-        messages: any; // Array<string> | Array<KeyedMessage> | string | KeyedMessage
-        partition?: number;
-        attributes?: number;
-    }
-
-    // Consumer
     export interface Consumer {
         on(eventName: string, cb: (message: string) => any): void;
         on(eventName: string, cb: (error: any) => any): void;
@@ -81,24 +55,6 @@ declare module 'kafka-node' {
         new(client: Client, fetchRequests: Array<Topic>, options: ConsumerOptions): Consumer;
     }
 
-    export interface ConsumerOptions {
-        groupId: string;
-        autoCommit: boolean;
-        autoCommitIntervalMs?: number;
-        fetchMaxWaitMs?: number;
-        fetchMinBytes?: number;
-        fetchMaxBytes?: number;
-        fromOffset?: boolean;
-        encoding?: string;
-    }
-
-    // TopicWithOffset
-    export interface Topic {
-        topic: string;
-        offset?: number;
-    }
-
-    // HighLevelConsumer
     export interface HighLevelConsumer {
         on(eventName: string, cb: (message: string) => any): void;
         on(eventName: string, cb: (error: any) => any): void;
@@ -118,7 +74,6 @@ declare module 'kafka-node' {
         new(client: Client, payloads: Array<Topic>, options: ConsumerOptions): HighLevelConsumer;
     }
 
-    // Offset
     export interface Offset {
         on(eventName: string, cb: () => any): void;
         fetch(payloads: Array<OffsetRequest>, cb: (error: any, data: any) => any): void;
@@ -128,6 +83,44 @@ declare module 'kafka-node' {
 
     export interface OffsetFactory {
         new(client: Client): Offset;
+    }
+
+    // # Minor Classes
+    export interface ZKOptions {
+        sessionTimeout?: number;
+        spinDelay?: number;
+        retries?: number;
+    }
+
+    export interface KeyedMessage {
+
+    }
+
+    interface KeyedMessageFactory {
+        new(key: string, message: string): KeyedMessage;
+    }
+
+    interface ProduceRequest {
+        topic: string;
+        messages: any; // Array<string> | Array<KeyedMessage> | string | KeyedMessage
+        partition?: number;
+        attributes?: number;
+    }
+
+    export interface ConsumerOptions {
+        groupId: string;
+        autoCommit: boolean;
+        autoCommitIntervalMs?: number;
+        fetchMaxWaitMs?: number;
+        fetchMinBytes?: number;
+        fetchMaxBytes?: number;
+        fromOffset?: boolean;
+        encoding?: string;
+    }
+
+    export interface Topic {
+        topic: string;
+        offset?: number;
     }
 
     export interface OffsetRequest {
@@ -149,7 +142,7 @@ declare module 'kafka-node' {
         partition?: number;
     }
 
-    // API
+    // # API
     var Client: ClientFactory;
     var KeyedMessage: KeyedMessageFactory;
     var Producer: ProducerFactory;
