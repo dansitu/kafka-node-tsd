@@ -27,7 +27,7 @@ producer.on('ready', function(){
         partition: 0
     }, {
         topic: 'topicName',
-        messags: ['message body'],
+        messages: ['message body'],
         attributes: 0
     }, {
         topic: 'topicName',
@@ -60,7 +60,7 @@ highLevelProducer.on('ready', function(){
         partition: 0
     }, {
         topic: 'topicName',
-        messags: ['message body'],
+        messages: ['message body'],
         attributes: 0
     }, {
         topic: 'topicName',

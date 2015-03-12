@@ -22,10 +22,10 @@ declare module 'kafka-node' {
 
     // Producer
     export interface Producer {
-        on(eventName: string, cb: () => void): void;
-        on(eventName: string, cb: (error: Error) => void): void;
-        send(payloads: any, cb: (error: Error, data: Object) => void): void;
-        createTopics(topics: Array<string>, async: boolean, cb?: (error: Error, data: Object) => void): void;
+        on(eventName: string, cb: () => any): void;
+        on(eventName: string, cb: (error: any) => any): void;
+        send(payloads: Array<ProduceRequest>, cb: (error: any, data: any) => any): void;
+        createTopics(topics: Array<string>, async: boolean, cb?: (error: any, data: any) => any): void;
     }
 
     interface ProducerFactory {
@@ -34,10 +34,10 @@ declare module 'kafka-node' {
 
     // HighLevelProducer
     export interface HighLevelProducer {
-        on(eventName: string, cb: () => void): void;
-        on(eventName: string, cb: (error: Error) => void): void;
-        send(payloads: Array<ProduceRequest>, cb: (error: Error, data: Object) => void): void;
-        createTopics(topics: Array<string>, async: boolean, cb?: (error: Error, data: Object) => void): void;
+        on(eventName: string, cb: () => any): void;
+        on(eventName: string, cb: (error: any) => any): void;
+        send(payloads: Array<ProduceRequest>, cb: (error: any, data: any) => any): void;
+        createTopics(topics: Array<string>, async: boolean, cb?: (error: any, data: any) => any): void;
     }
 
     interface HighLevelProducerFactory {
@@ -56,24 +56,25 @@ declare module 'kafka-node' {
     // ProduceRequest
     interface ProduceRequest {
         topic: string;
+        messages: any; // Array<string> | Array<KeyedMessage> | string | KeyedMessage
         partition?: number;
         attributes?: number;
     }
 
     // Consumer
     export interface Consumer {
-        on(eventName: string, cb: (message: string) => void): void;
-        on(eventName: string, cb: (error: Error) => void): void;
-        addTopics(topics: Array<string>, cb: (error: Error, added: boolean) => void): void;
-        addTopics(topics: Array<Topic>, cb: (error: Error, added: boolean) => void, fromOffset: boolean): void;
-        removeTopics(topics: Array<string>, cb: (error: Error, removed: boolean) => void): void;
-        commit(cb: (error: Error, data: any) => void): void;
+        on(eventName: string, cb: (message: string) => any): void;
+        on(eventName: string, cb: (error: any) => any): void;
+        addTopics(topics: Array<string>, cb: (error: any, added: boolean) => any): void;
+        addTopics(topics: Array<Topic>, cb: (error: any, added: boolean) => any, fromOffset: boolean): void;
+        removeTopics(topics: Array<string>, cb: (error: any, removed: boolean) => any): void;
+        commit(cb: (error: any, data: any) => any): void;
         setOffset(topic: string, partition: number, offset: number): void;
         pause(): void;
         resume(): void;
-        pauseTopics(topics: Array<any>): void;
-        resumeTopics(topics: Array<any>): void;
-        close(force: boolean, cb: () => void): void;
+        pauseTopics(topics: Array<any> /* Array<string|Topic> */): void;
+        resumeTopics(topics: Array<any> /* Array<string|Topic> */): void;
+        close(force: boolean, cb: () => any): void;
     }
 
     interface ConsumerFactory {
@@ -99,18 +100,18 @@ declare module 'kafka-node' {
 
     // HighLevelConsumer
     export interface HighLevelConsumer {
-        on(eventName: string, cb: (message: string) => void): void;
-        on(eventName: string, cb: (error: Error) => void): void;
-        addTopics(topics: Array<string>, cb: (error: Error, added: boolean) => void): void;
-        addTopics(topics: Array<Topic>, cb: (error: Error, added: boolean) => void, fromOffset: boolean): void;
-        removeTopics(topics: Array<string>, cb: (error: Error, removed: boolean) => void): void;
-        commit(cb: (error: Error, data: any) => void): void;
+        on(eventName: string, cb: (message: string) => any): void;
+        on(eventName: string, cb: (error: any) => any): void;
+        addTopics(topics: Array<string>, cb: (error: any, added: boolean) => any): void;
+        addTopics(topics: Array<Topic>, cb: (error: any, added: boolean) => any, fromOffset: boolean): void;
+        removeTopics(topics: Array<string>, cb: (error: any, removed: boolean) => any): void;
+        commit(cb: (error: any, data: any) => any): void;
         setOffset(topic: string, partition: number, offset: number): void;
         pause(): void;
         resume(): void;
-        pauseTopics(topics: Array<any>): void;
-        resumeTopics(topics: Array<any>): void;
-        close(force: boolean, cb: () => void): void;
+        pauseTopics(topics: Array<any> /* Array<string|Topic> */): void;
+        resumeTopics(topics: Array<any> /* Array<string|Topic> */): void;
+        close(force: boolean, cb: () => any): void;
     }
 
     export interface HighLevelConsumerFactory {
@@ -119,10 +120,10 @@ declare module 'kafka-node' {
 
     // Offset
     export interface Offset {
-        on(eventName: string, cb: () => void): void;
-        fetch(payloads: Array<OffsetRequest>, cb: (error: Error, data: any) => void): void;
-        commit(groupId: string, payloads: Array<OffsetCommitRequest>, cb: (error: Error, data: any) => void): void;
-        fetchCommits(groupId: string, payloads: Array<OffsetFetchRequest>, cb: (error: Error, data: any) => void): void;
+        on(eventName: string, cb: () => any): void;
+        fetch(payloads: Array<OffsetRequest>, cb: (error: any, data: any) => any): void;
+        commit(groupId: string, payloads: Array<OffsetCommitRequest>, cb: (error: any, data: any) => any): void;
+        fetchCommits(groupId: string, payloads: Array<OffsetFetchRequest>, cb: (error: any, data: any) => any): void;
     }
 
     export interface OffsetFactory {
